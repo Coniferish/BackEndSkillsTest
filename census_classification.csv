@@ -1,0 +1,65 @@
+id,name,abbrv,level,parent_id
+01,Alabama,AL,state,D6
+02,Alaska,AK,state,D9
+04,Arizona,AZ,state,D8
+05,Arkansas,AR,state,D7
+06,California,CA,state,D9
+08,Colorado,CO,state,D8
+09,Connecticut,CT,state,D1
+10,Delaware,DE,state,D5
+11,District of Columbia,DC,state,D5
+12,Florida,FL,state,D5
+13,Georgia,GA,state,D5
+15,Hawaii,HI,state,D9
+16,Idaho,ID,state,D8
+17,Illinois,IL,state,D3
+18,Indiana,IN,state,D3
+19,Iowa,IA,state,D4
+20,Kansas,KS,state,D4
+21,Kentucky,KY,state,D6
+22,Louisiana,LA,state,D7
+23,Maine,ME,state,D1
+24,Maryland,MD,state,D5
+25,Massachusetts,MA,state,D1
+26,Michigan,MI,state,D3
+27,Minnesota,MN,state,D4
+28,Mississippi,MS,state,D6
+29,Missouri,MO,state,D4
+30,Montana,MT,state,D8
+31,Nebraska,NE,state,D4
+32,Nevada,NV,state,D8
+33,New Hampshire,NH,state,D1
+34,New Jersey,NJ,state,D2
+35,New Mexico,NM,state,D8
+36,New York,NY,state,D2
+37,North Carolina,NC,state,D5
+38,North Dakota,ND,state,D4
+39,Ohio,OH,state,D3
+40,Oklahoma,OK,state,D7
+41,Oregon,OR,state,D9
+42,Pennsylvania,PA,state,D2
+44,Rhode Island,RI,state,D1
+45,South Carolina,SC,state,D5
+46,South Dakota,SD,state,D4
+47,Tennessee,TN,state,D6
+48,Texas,TX,state,D7
+49,Utah,UT,state,D8
+50,Vermont,VT,state,D1
+51,Virginia,VA,state,D5
+53,Washington,WA,state,D9
+54,West Virginia,WV,state,D5
+55,Wisconsin,WI,state,D3
+56,Wyoming,WY,state,D8
+D1,New England,,division,R1
+D2,Middle Atlantic,,division,R1
+D3,East North Central,,division,R2
+D4,West North Central,,division,R2
+D5,South Atlantic,,division,R3
+D6,East South Central,,division,R3
+D7,West South Central,,division,R3
+D8,Mountain,,division,R4
+D9,Pacific,,division,R4
+R1,Northeast,,region,
+R2,Midwest,,region,
+R3,South,,region,
+R4,West,,region,
