@@ -1,0 +1,14 @@
+census_id,name,abbrv,level,parent_id
+D1,New England,,division,R1
+D2,Middle Atlantic,,division,R1
+D3,East North Central,,division,R2
+D4,West North Central,,division,R2
+D5,South Atlantic,,division,R3
+D6,East South Central,,division,R3
+D7,West South Central,,division,R3
+D8,Mountain,,division,R4
+D9,Pacific,,division,R4
+R1,Northeast,,region,
+R2,Midwest,,region,
+R3,South,,region,
+R4,West,,region,
