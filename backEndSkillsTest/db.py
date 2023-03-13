@@ -43,7 +43,7 @@ q_most_moved_from_state = """
     """
     
 q_percent_migration = """
-    SELECT m.previous_state, (m.estimate/p.population) percentage, m.year
+    SELECT m.previous_state, (m.estimate/p.population)*100 percentage, m.year
     FROM migrations m
     INNER JOIN state_pop p
     ON m.previous_state = p.state AND m.year = p.year
