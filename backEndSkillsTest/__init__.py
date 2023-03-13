@@ -25,18 +25,19 @@ def q2():
     # hard-coded because not all subqueries for this view support substitution
     state = 'nc'
     count_10k = get_num_of_states_min_10k_moved(state.upper())
-    count_10k_df = pd.DataFrame(count_10k, columns=['Count of States with Migration>10k', 'Year'])
+    count_10k_df = pd.DataFrame(count_10k, columns=['Count of States with Migration > 10k', 'Year'])
     
     most_moved = get_most_moved_from_state(state.upper())
-    most_moved_df = pd.DataFrame(most_moved, columns=['State with Greatest Migration', 'Year'])
+    most_moved_df = pd.DataFrame(most_moved, columns=['State with Highest Total Migration', 'Year'])
     
     percent_migration = get_percent_migration(state.upper())
-    percent_migration_df = pd.DataFrame(percent_migration, columns=['Previous State', 'Percent Migrated', 'Year'])
-    idx = percent_migration_df.groupby(['Year'])['Percent Migrated'].transform(max) == percent_migration_df['Percent Migrated']
-    print(percent_migration_df[idx])
+    percent_migration_df = pd.DataFrame(percent_migration, columns=['State with Highest Migration Proportion', 'Percent Migrated', 'Year'])
+    idx = percent_migration_df.groupby(['Year'])['Percent Migrated'].transform(max) == percent_migration_df['Percent Migrated']   
     
-    combined_df = pd.merge(most_moved_df, count_10k_df, how='outer', on='Year')
-    return percent_migration_df[idx].to_json()
+    dfs = pd.merge(most_moved_df, count_10k_df, how='outer', on='Year')
+    dfs = pd.merge(percent_migration_df[idx], dfs, how='outer', on='Year')
+    print(dfs)
+    return dfs.to_json()
 
 if __name__ == '__main__':
     app.run(debug=True)
