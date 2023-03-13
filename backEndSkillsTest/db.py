@@ -22,6 +22,14 @@ q_states_in_region = """
     FROM state_div_reg
     WHERE reg_id = '{region}';
     """
+    
+q_num_of_states_min_10k_moved = """
+    SELECT COUNT(previous_state) {state}, year 
+    FROM migrations 
+    WHERE current_state='{state}' 
+    AND estimate>10000
+    GROUP BY year;
+    """
 
 def create_connection(host_name, user_name, user_password, db_name=None):
     connection = None
@@ -55,6 +63,9 @@ def get_states_in_region(r):
     return get_query(query)
 
 def get_migration_to_region_in_year(r, y):
-    query = q_total_migration_to_region_in_year.format(year=y, region=r)
-    print(query)
+    query = q_total_migration_to_region_in_year.format(region=r, year=y)
+    return get_query(query)
+
+def get_num_of_states_min_10k_moved(s):
+    query = q_num_of_states_min_10k_moved.format(state=s)
     return get_query(query)

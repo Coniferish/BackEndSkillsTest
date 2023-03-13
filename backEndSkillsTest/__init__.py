@@ -14,5 +14,10 @@ def migration_to_region_in_year(region, year):
     response = jsonify(get_migration_to_region_in_year(region, year))
     return response
 
+@app.route('/min10k/<state>')
+def num_of_states_min_10k_moved(state):
+    response = jsonify(get_num_of_states_min_10k_moved(state))
+    return response
+
 if __name__ == '__main__':
     app.run(debug=True)
