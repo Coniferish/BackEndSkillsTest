@@ -8,19 +8,19 @@ load_dotenv()
 sql_password = os.environ['MYSQL_PASSWORD']
 database = 'state_migrations'
 
-migrate_to_region_query = """
+q_total_migrate_to_region = """
     SELECT SUM(m.estimate)
 	FROM migrations m
-	WHERE m.year = {} AND m.current_state IN (
+	WHERE m.year = {year} AND m.current_state IN (
 	SELECT abbrv 
 	FROM state_div_reg
-    WHERE reg_id = '{}');
+    WHERE reg_id = '{region}');
     """
     
 query_states_in_region = """
     SELECT abbrv 
     FROM state_div_reg
-    WHERE reg_id = '{}';
+    WHERE reg_id = '{region}';
     """
 
 def create_connection(host_name, user_name, user_password, db_name=None):
@@ -50,6 +50,11 @@ def get_query(query):
     except Exception as err:
         print(f"Error: '{err}'")
 
-def get_states_in_region(region):
-    query = query_states_in_region.format(region)
+def get_states_in_region(r):
+    query = query_states_in_region.format(region=r)
+    return get_query(query)
+
+def get_migration_to_region_in_year(r, y):
+    query = q_total_migrate_to_region.format(year=y, region=r)
+    print(query)
     return get_query(query)
