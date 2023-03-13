@@ -20,17 +20,23 @@ def num_of_states_min_10k_moved(state):
     response = jsonify(get_num_of_states_min_10k_moved(state))
     return response
 
-@app.route('/q2/<state>')
-def q2(state):
+@app.route('/q2/nc')
+def q2():
+    # hard-coded because not all subqueries for this view support substitution
+    state = 'nc'
     count_10k = get_num_of_states_min_10k_moved(state.upper())
     count_10k_df = pd.DataFrame(count_10k, columns=['Count of States with Migration>10k', 'Year'])
     
     most_moved = get_most_moved_from_state(state.upper())
     most_moved_df = pd.DataFrame(most_moved, columns=['State with Greatest Migration', 'Year'])
     
+    percent_migration = get_percent_migration(state.upper())
+    percent_migration_df = pd.DataFrame(percent_migration, columns=['Previous State', 'Percent Migrated', 'Year'])
+    idx = percent_migration_df.groupby(['Year'])['Percent Migrated'].transform(max) == percent_migration_df['Percent Migrated']
+    print(percent_migration_df[idx])
+    
     combined_df = pd.merge(most_moved_df, count_10k_df, how='outer', on='Year')
-    print(combined_df)
-    return combined_df.to_json()
+    return percent_migration_df[idx].to_json()
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -41,6 +41,14 @@ q_most_moved_from_state = """
 	GROUP BY year) AS m
     ON migrations.estimate = m.max_est;
     """
+    
+q_percent_migration = """
+    SELECT m.previous_state, (m.estimate/p.population) percentage, m.year
+    FROM migrations m
+    INNER JOIN state_pop p
+    ON m.previous_state = p.state AND m.year = p.year
+    WHERE current_state='{state}';
+    """
 
 def create_connection(host_name, user_name, user_password, db_name=None):
     connection = None
@@ -83,4 +91,8 @@ def get_num_of_states_min_10k_moved(s):
 
 def get_most_moved_from_state(s):
     query = q_most_moved_from_state.format(state=s)
+    return get_query(query)
+
+def get_percent_migration(s):
+    query = q_percent_migration.format(state=s)
     return get_query(query)
