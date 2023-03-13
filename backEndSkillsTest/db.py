@@ -32,7 +32,7 @@ q_num_of_states_min_10k_moved = """
     """
     
 q_most_moved_from_state = """
-    SELECT previous_state state, migrations.year, estimate
+    SELECT previous_state state, migrations.year
     FROM migrations 
     INNER JOIN
 	(SELECT MAX(estimate) max_est, year
