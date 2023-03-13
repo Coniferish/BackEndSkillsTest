@@ -50,6 +50,34 @@ q_percent_migration = """
     WHERE current_state='{state}';
     """
 
+# TODO: create query based on census_id, not state abbrv
+q_previous_state = """
+    SELECT m.current_state,
+        m.previous_state, 
+        m.year,
+        m.estimate,
+        m.estimate-m.margin_of_error,
+        m.estimate+m.margin_of_error
+    FROM migrations m
+    WHERE current_state = 'NC'
+    AND previous_state = '{state}';
+    """
+
+# TODO: refactor to append 'year' filter to prevent redundant queries (see above)
+q_previous_state_year = """
+    SELECT m.current_state,
+        m.previous_state, 
+        m.year,
+        m.estimate,
+        m.estimate-m.margin_of_error,
+        m.estimate+m.margin_of_error
+    FROM migrations m
+    WHERE current_state = 'NC'
+    AND previous_state = '{state}'
+    AND year = '{year}';
+    """
+
+
 def create_connection(host_name, user_name, user_password, db_name=None):
     connection = None
     try:
@@ -95,4 +123,12 @@ def get_most_moved_from_state(s):
 
 def get_percent_migration(s):
     query = q_percent_migration.format(state=s)
+    return get_query(query)
+
+def get_previous_state(s):
+    query = q_previous_state.format(state=s)
+    return get_query(query)
+
+def get_previous_state_year(s, y):
+    query = q_previous_state_year.format(state=s, year=y)
     return get_query(query)

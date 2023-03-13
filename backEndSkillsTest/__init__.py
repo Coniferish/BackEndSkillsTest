@@ -39,6 +39,18 @@ def q2(state):
     print(dfs)
     return dfs.to_json()
 
+# TODO: create query based on census_id, not state abbrv
+@app.route('/previous_state/<id>/', defaults={'year':None})
+@app.route('/previous_state/<id>/<year>/')
+def previous_state(id, year):
+    # https://flask.palletsprojects.com/en/2.2.x/api/#url-route-registrations
+    if year:
+        response = get_previous_state_year(id, year)
+    else:
+        response = get_previous_state(id)
+    
+    return response
+
 if __name__ == '__main__':
     app.run(debug=True)
     
