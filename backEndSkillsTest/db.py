@@ -30,6 +30,17 @@ q_num_of_states_min_10k_moved = """
     AND estimate>10000
     GROUP BY year;
     """
+    
+q_most_moved_from_state = """
+    SELECT previous_state state, migrations.year, estimate
+    FROM migrations 
+    INNER JOIN
+	(SELECT MAX(estimate) max_est, year
+	FROM migrations 
+	WHERE current_state = '{state}' 
+	GROUP BY year) AS m
+    ON migrations.estimate = m.max_est;
+    """
 
 def create_connection(host_name, user_name, user_password, db_name=None):
     connection = None
@@ -68,4 +79,8 @@ def get_migration_to_region_in_year(r, y):
 
 def get_num_of_states_min_10k_moved(s):
     query = q_num_of_states_min_10k_moved.format(state=s)
+    return get_query(query)
+
+def get_most_moved_from_state(s):
+    query = q_most_moved_from_state.format(state=s)
     return get_query(query)

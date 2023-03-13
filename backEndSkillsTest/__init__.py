@@ -22,10 +22,15 @@ def num_of_states_min_10k_moved(state):
 
 @app.route('/q2/<state>')
 def q2(state):
-    count_10k = get_num_of_states_min_10k_moved(state)
-    count_df = pd.DataFrame(count_10k, columns=['Count', 'Year'])
-    print(count_df)
-    return count_10k
+    count_10k = get_num_of_states_min_10k_moved(state.upper())
+    count_10k_df = pd.DataFrame(count_10k, columns=['Count', 'Year'])
+    
+    most_moved = get_most_moved_from_state(state.upper())
+    most_moved_df = pd.DataFrame(most_moved, columns=['State with Greatest Migration', 'Year', 'Estimate'])
+    
+    combined_df = pd.merge(most_moved_df, count_10k_df, how='outer', on='Year')
+    print(combined_df)
+    return combined_df.to_json()
 
 if __name__ == '__main__':
     app.run(debug=True)
