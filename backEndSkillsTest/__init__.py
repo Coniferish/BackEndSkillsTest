@@ -3,6 +3,7 @@ from .db import *
 import pandas as pd
 from io import StringIO
 import csv
+from collections import defaultdict
 
 app = Flask(__name__)
 
@@ -22,12 +23,18 @@ def migration_to_region_in_year(region, year):
     response = jsonify(get_migration_to_region_in_year(region, year))
     return response
 
-@app.route('/q1/')
-def q1():
-    # get all states in a division (note the region they're in)
-    # for each state:
-        # sum += estimate (of each region)
-    pass
+# @app.route('/q1/')
+# def q1():
+#     # get all states in a division (note the region they're in)
+#     divisions =  get_all_divisions
+#     div_states = {division: [get_states_in_div] for division in divisions}
+#     # for each state:
+#     for div, states in div_states:
+#         for state in states:
+#             for year in range(2010,2020):
+#                 sum_migrations = get_migrations_to_region_from_state()
+#         # sum += estimate (of each region)
+#     pass
     
 
 @app.route('/q2/<state>/')
