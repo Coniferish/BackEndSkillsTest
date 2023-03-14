@@ -83,7 +83,7 @@ q_previous_division = """
     year,
     SUM(m.estimate),
     SUM(m.estimate)-SUM(m.margin_of_error),
-    SUM(m.estimate)-SUM(m.margin_of_error)
+    SUM(m.estimate)+SUM(m.margin_of_error)
     FROM migrations m
     WHERE m.previous_state IN (
     SELECT abbrv 
@@ -94,9 +94,9 @@ q_previous_division = """
 
 q_previous_division_year = """
     SELECT
-    SUM(m.estimate),
+    SUM(m.estimate) Estimate,
     SUM(m.estimate)-SUM(m.margin_of_error),
-    SUM(m.estimate)-SUM(m.margin_of_error)
+    SUM(m.estimate)+SUM(m.margin_of_error)
     FROM migrations m
     WHERE m.previous_state IN (
     SELECT abbrv 
