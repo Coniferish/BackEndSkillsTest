@@ -47,23 +47,36 @@ For this project I chose to use MySQL, Flask, and Pandas since I already had som
 
 I started out creating the database and tables based on the csv files provided, making some changes to the structure and file names. I then initialized the tables:
 
-- `mysql> CREATE TABLE state_pop (`
-- `> id INT NOT NULL AUTO_INCREMENT,`
-- `> state VARCHAR(5) NOT NULL,`
-- `> year INT NOT NULL,`
-- `> population INT NOT NULL,`
-- `> PRIMARY KEY (id));`
+- `CREATE TABLE state_pop (`
+- `id INT NOT NULL AUTO_INCREMENT,`
+- `state VARCHAR(5) NOT NULL,`
+- `year INT NOT NULL,`
+- `population INT NOT NULL,`
+- `PRIMARY KEY (id));`
 
 After getting the tables configured and populated, I started out focusing on Task 2 and breaking the subproblems dwon into more simple queries, answering questions that would build towards answering the initial prompt:
 
-ex: What percentage of people migrated to NC from each state each year?
-- `mysql> SELECT m.previous_state, (m.estimate/p.population) percentage, m.year`
+ex 1: 	Select all states and their region
+- `SELECT s.abbrv, s.census_id, s.parent_id, d.parent_id`
+- `FROM census_states s`
+- `LEFT JOIN regions_and_divisions d`
+- `ON s.parent_id = d.census_id;`
+
+ex 2: Sum the estimate of people who moved to a particular region in a given year
+- `SELECT SUM(m.estimate)`
+- `FROM migrations m`
+- `WHERE m.year = 2010 AND m.current_state IN (`
+- `SELECT abbrv `
+- `FROM state_div_reg`
+- `WHERE reg_id = 'R1');`
+
+ex 3: What percentage of people migrated to NC from each state each year?
+- `SELECT m.previous_state, (m.estimate/p.population) percentage, m.year`
 - `FROM migrations m`
 - `INNER JOIN state_pop p`
 - `ON m.previous_state = p.state AND m.year = p.year`
 - `WHERE current_state='NC';`
-I created a view based on the query above and answered similar questions until I either answered the initial prompt or was close enough to the answer where I knew I would be able to get the desired result using pandas and python.
+
+I answered similar questions until I either answered the initial prompt or was close enough to the answer where I knew I would be able to get the desired result using pandas and python.
 
 After completing my initial queries, I chose to use Flask to build my API. I have more recent experience with Django, but it would have added more complexity than needed for this project. 
-
-I read through some of the documentation for SQLAlchemy, but have no prior experience with it, so I ended up using mysql-connector-python as my driver for connecting to my database.
