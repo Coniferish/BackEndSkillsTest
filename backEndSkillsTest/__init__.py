@@ -1,9 +1,21 @@
-from flask import Flask, jsonify
-# from .db import get_states_in_region, get_migration_to_region_in_year
+from flask import Flask, jsonify, make_response
 from .db import *
 import pandas as pd
+from io import StringIO
+import csv
 
 app = Flask(__name__)
+
+def get_csv(df, state):
+    # https://stackoverflow.com/questions/56007695/download-csv-file-in-flask-best-practice
+    sio = StringIO()
+    writer = csv.writer(sio)
+    writer.writerow(df.columns.tolist())
+    writer.writerows(df.values.tolist())
+    output = make_response(sio.getvalue())
+    output.headers["Content-Disposition"] = f"attachment; filename={state}_migration_stats.csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
 
 @app.route('/statesin/<region>/')
 def states_in_region(region):
@@ -22,20 +34,19 @@ def num_of_states_min_10k_moved(state):
 
 @app.route('/q2/<state>/')
 def q2(state):
-    count_10k = get_num_of_states_min_10k_moved(state.upper())
+    count_10k = get_num_of_states_min_10k_moved(state)
     count_10k_df = pd.DataFrame(count_10k, columns=['Count of States with Migration > 10k', 'Year'])
     
-    most_moved = get_most_moved_from_state(state.upper())
+    most_moved = get_most_moved_from_state(state)
     most_moved_df = pd.DataFrame(most_moved, columns=['State with Highest Total Migration', 'Year'])
     
-    percent_migration = get_percent_migration(state.upper())
+    percent_migration = get_percent_migration(state)
     percent_migration_df = pd.DataFrame(percent_migration, columns=['State with Highest Migration Proportion', 'Percent Migrated', 'Year'])
     idx = percent_migration_df.groupby(['Year'])['Percent Migrated'].transform(max) == percent_migration_df['Percent Migrated']   
     
     dfs = pd.merge(most_moved_df, count_10k_df, how='outer', on='Year')
     dfs = pd.merge(percent_migration_df[idx], dfs, how='outer', on='Year')
-    print(dfs)
-    return dfs.to_json()
+    return get_csv(dfs, state)
 
 # TODO: create query based on census_id, not state abbrv
 @app.route('/previous_state/<id>/', defaults={'year':None})
