@@ -80,3 +80,11 @@ ex 3: What percentage of people migrated to NC from each state each year?
 I answered similar questions until I either answered the initial prompt or was close enough to the answer where I knew I would be able to get the desired result using pandas and python.
 
 After completing my initial queries, I chose to use Flask to build my API. I have more recent experience with Django, but it would have added more complexity than needed for this project. 
+
+### Routes:
+- `/migrationto/<region>/<year>/`
+- `/q2/<state>/`
+- `/previous_state/<id>/`
+- `/previous_state/<id>/<year>/`
+- `/previous_division/<id>/`
+- `/previous_division/<id>/<year>/`
