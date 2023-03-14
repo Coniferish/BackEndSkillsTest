@@ -22,6 +22,14 @@ def migration_to_region_in_year(region, year):
     response = jsonify(get_migration_to_region_in_year(region, year))
     return response
 
+@app.route('/q1/')
+def q1():
+    # get all states in a division (note the region they're in)
+    # for each state:
+        # sum += estimate (of each region)
+    pass
+    
+
 @app.route('/q2/<state>/')
 def q2(state):
     count_10k = get_num_of_states_min_10k_moved(state)
