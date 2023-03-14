@@ -17,12 +17,6 @@ q_total_migration_to_region_in_year = """
     WHERE reg_id = '{region}');
     """
     
-q_states_in_region = """
-    SELECT abbrv 
-    FROM state_div_reg
-    WHERE reg_id = '{region}';
-    """
-    
 q_num_of_states_min_10k_moved = """
     SELECT COUNT(previous_state) {state}, year 
     FROM migrations 
@@ -114,13 +108,13 @@ def create_connection(host_name, user_name, user_password, db_name=None):
             passwd=user_password,
             database=db_name
         )
-        print("MySQL Database connection successful")
+        print('MySQL Database connection successful')
     except Exception as err:
         print(f"Error: '{err}'")
     return connection
 
 def get_query(query):
-    connection = create_connection("localhost", "root", sql_password, database)
+    connection = create_connection('localhost', 'root', sql_password, database)
     cursor = connection.cursor()
     try:
         result = []
@@ -131,10 +125,6 @@ def get_query(query):
         return result
     except Exception as err:
         print(f"Error: '{err}'")
-
-def get_states_in_region(r):
-    query = q_states_in_region.format(region=r)
-    return get_query(query)
 
 def get_migration_to_region_in_year(r, y):
     query = q_total_migration_to_region_in_year.format(region=r, year=y)

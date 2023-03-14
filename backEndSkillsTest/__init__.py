@@ -6,30 +6,20 @@ import csv
 
 app = Flask(__name__)
 
-def get_csv(df, state):
+def get_csv(df, file_name):
     # https://stackoverflow.com/questions/56007695/download-csv-file-in-flask-best-practice
     sio = StringIO()
     writer = csv.writer(sio)
     writer.writerow(df.columns.tolist())
     writer.writerows(df.values.tolist())
     output = make_response(sio.getvalue())
-    output.headers["Content-Disposition"] = f"attachment; filename={state}_migration_stats.csv"
-    output.headers["Content-type"] = "text/csv"
+    output.headers['Content-Disposition'] = f'attachment; filename={file_name}.csv'
+    output.headers['Content-type'] = 'text/csv'
     return output
-
-@app.route('/statesin/<region>/')
-def states_in_region(region):
-    response = jsonify(get_states_in_region(region))
-    return response
 
 @app.route('/migrationto/<region>/<year>/')
 def migration_to_region_in_year(region, year):
     response = jsonify(get_migration_to_region_in_year(region, year))
-    return response
-
-@app.route('/min10k/<state>/')
-def num_of_states_min_10k_moved(state):
-    response = jsonify(get_num_of_states_min_10k_moved(state))
     return response
 
 @app.route('/q2/<state>/')
@@ -46,7 +36,8 @@ def q2(state):
     
     dfs = pd.merge(most_moved_df, count_10k_df, how='outer', on='Year')
     dfs = pd.merge(percent_migration_df[idx], dfs, how='outer', on='Year')
-    return get_csv(dfs, state)
+    file_name = f"{state}_migration_stats"
+    return get_csv(dfs, file_name)
 
 # TODO: create query based on census_id, not state abbrv
 @app.route('/previous_state/<id>/', defaults={'year':None})
