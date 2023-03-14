@@ -51,14 +51,21 @@ def previous_state(id, year):
 @app.route('/previous_division/<id>/', defaults={'year':None})
 @app.route('/previous_division/<id>/<year>/')
 def previous_division(id, year):
+    columns=['Division', 'Year', 'Estimated Migration', 'Estiamted Migration LB', 'Estimated Migration UB']
     # current_state = NC, so sum of the states that moved to N (by division)
     if year:
         response = get_previous_division_year(id, year)
-        response = [(id, year)+row for row in response]
+        response = pd.DataFrame(
+            [(id, year)+row for row in response], 
+            columns=columns
+            )
     else:
         response = get_previous_division(id)
-        response = [(id,)+row for row in response]
-    return response
+        response = pd.DataFrame(
+            [(id,)+row for row in response],
+            columns=columns
+            )
+    return response.to_json()
 
 if __name__ == '__main__':
     app.run(debug=True)
