@@ -42,11 +42,12 @@ def q2(state):
 @app.route('/previous_state/<id>/<year>/')
 def previous_state(id, year):
     # https://flask.palletsprojects.com/en/2.2.x/api/#url-route-registrations
+    columns=['Current State', 'Previous State', 'Year', 'Estimated Migration', 'Estiamted Migration LB', 'Estimated Migration UB']
     if year:
-        response = get_previous_state_year(id, year)
+        response = pd.DataFrame(get_previous_state_year(id, year), columns=columns)
     else:
-        response = get_previous_state(id)
-    return response
+        response = pd.DataFrame(get_previous_state(id), columns=columns)
+    return response.to_json()
 
 @app.route('/previous_division/<id>/', defaults={'year':None})
 @app.route('/previous_division/<id>/<year>/')
