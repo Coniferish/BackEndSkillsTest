@@ -22,8 +22,6 @@ def num_of_states_min_10k_moved(state):
 
 @app.route('/q2/<state>/')
 def q2(state):
-    # hard-coded because not all subqueries for this view support substitution
-    # state = 'nc'
     count_10k = get_num_of_states_min_10k_moved(state.upper())
     count_10k_df = pd.DataFrame(count_10k, columns=['Count of States with Migration > 10k', 'Year'])
     
@@ -48,7 +46,18 @@ def previous_state(id, year):
         response = get_previous_state_year(id, year)
     else:
         response = get_previous_state(id)
-    
+    return response
+
+@app.route('/previous_division/<id>/', defaults={'year':None})
+@app.route('/previous_division/<id>/<year>/')
+def previous_division(id, year):
+    # current_state = NC, so sum of the states that moved to N (by division)
+    if year:
+        response = get_previous_division_year(id, year)
+        response = [(id, year)+row for row in response]
+    else:
+        response = get_previous_division(id)
+        response = [(id,)+row for row in response]
     return response
 
 if __name__ == '__main__':

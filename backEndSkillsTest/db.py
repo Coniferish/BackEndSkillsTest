@@ -77,6 +77,33 @@ q_previous_state_year = """
     AND year = '{year}';
     """
 
+# TODO: refactor to reuse select statement (repeated 4 times)
+q_previous_division = """
+    SELECT 
+    year,
+    SUM(m.estimate),
+    SUM(m.estimate)-SUM(m.margin_of_error),
+    SUM(m.estimate)-SUM(m.margin_of_error)
+    FROM migrations m
+    WHERE m.previous_state IN (
+    SELECT abbrv 
+    FROM state_div_reg s
+    WHERE div_id = '{division}')
+    GROUP BY year;
+    """
+
+q_previous_division_year = """
+    SELECT
+    SUM(m.estimate),
+    SUM(m.estimate)-SUM(m.margin_of_error),
+    SUM(m.estimate)-SUM(m.margin_of_error)
+    FROM migrations m
+    WHERE m.previous_state IN (
+    SELECT abbrv 
+    FROM state_div_reg s
+    WHERE div_id = '{division}')
+    AND year = '{year}';
+    """
 
 def create_connection(host_name, user_name, user_password, db_name=None):
     connection = None
@@ -131,4 +158,12 @@ def get_previous_state(s):
 
 def get_previous_state_year(s, y):
     query = q_previous_state_year.format(state=s, year=y)
+    return get_query(query)
+
+def get_previous_division(d):
+    query = q_previous_division.format(division=d)
+    return get_query(query)
+
+def get_previous_division_year(d, y):
+    query = q_previous_division_year.format(division=d, year=y)
     return get_query(query)
