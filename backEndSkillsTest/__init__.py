@@ -7,7 +7,7 @@ from collections import defaultdict
 
 app = Flask(__name__)
 
-def get_csv(df, file_name):
+def write_csv(df, file_name):
     # https://stackoverflow.com/questions/56007695/download-csv-file-in-flask-best-practice
     sio = StringIO()
     writer = csv.writer(sio)
@@ -23,18 +23,64 @@ def migration_to_region_in_year(region, year):
     response = jsonify(get_migration_to_region_in_year(region, year))
     return response
 
-# @app.route('/q1/')
-# def q1():
-#     # get all states in a division (note the region they're in)
-#     divisions =  get_all_divisions
-#     div_states = {division: [get_states_in_div] for division in divisions}
-#     # for each state:
-#     for div, states in div_states:
-#         for state in states:
-#             for year in range(2010,2020):
-#                 sum_migrations = get_migrations_to_region_from_state()
-#         # sum += estimate (of each region)
-#     pass
+@app.route('/q1/')
+def q1():
+    # previous division to current region
+    # d1 to r1
+    # d1 to r2 etc.
+    # each division will only be migrating to 3 potential regions (since they belong to their own region)
+    # each division contains 4-5 states
+    
+    # approaches:
+    #   summing w/ SQL:
+    #       get a list of states in each "previous" division (d1 = [MA, CT, NH, ME, VT])
+    #       get a list of states in each "current" region (list of lists)
+    # 
+    # div_states = {division: [get_states_in_div] for division in divisions}
+    
+    #   summing with loops:
+    #       define a list of states in "previous" division
+    #       define a list of states in "current" region
+    #       iterate over the migrations data and have some conditionals that 
+    #       check which division and region the current and previous state are in
+    #       and add those to the appropriate totals...
+    
+    REGIONS = ['R1', 'R2', 'R3', 'R4']
+    DIVISIONS =  get_all_divisions
+    # get all states in a division (note the region they're in)
+    
+    states_divs = {}
+    divs_regions = {}
+    states_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data/census_states.csv')
+    divs_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data/regions_and_divisions.csv')
+    
+    # Lazy creation of a dict containing divisions and the regions they belong to.
+    # It does not account for column headers or regions (which don't have a parent_id).
+    # Instead of having two very similar scripts, I could define a function, but then
+    # I would have to account for the column indices differences for what I'm looking for.
+    # I also am choosing to use state abbreviations 
+    # later below because those are what's used in the migrations.csv file.
+    with open(divs_file_path) as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        for row in reader:
+            divs_regions[row[0]] = row[-1]
+    
+    with open(states_file_path) as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        for row in reader:
+            states_divs[row[2]] = row[-1]
+    
+    print(divs_regions)
+    
+    
+    # div_states = {division: [get_states_in_div] for division in divisions}
+    # # for each state:
+    # for div, states in div_states:
+    #     for state in states:
+    #         for year in range(2010,2020):
+    #             sum_migrations = get_migrations_to_region_from_state()
+    #     # sum += estimate (of each region)
+    return '200'
     
 
 @app.route('/q2/<state>/')
@@ -52,7 +98,7 @@ def q2(state):
     dfs = pd.merge(most_moved_df, count_10k_df, how='outer', on='Year')
     dfs = pd.merge(percent_migration_df[idx], dfs, how='outer', on='Year')
     file_name = f"{state}_migration_stats"
-    return get_csv(dfs, file_name)
+    return write_csv(dfs, file_name)
 
 # TODO: create query based on census_id, not state abbrv
 @app.route('/previous_state/<id>/', defaults={'year':None})
