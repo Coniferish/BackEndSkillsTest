@@ -53,7 +53,6 @@ def q1():
     
     REGIONS = ['R1', 'R2', 'R3', 'R4']
     DIVISIONS =  get_all_divisions()
-    categories = [d[0] + ' to ' + r + ' ' + str(y) for r in REGIONS for d in DIVISIONS for y in range(2010,2020)]
     divisions_to_regions = defaultdict(lambda: 0)
     # get all states in a division (note the region they're in)
     
@@ -93,7 +92,7 @@ def q1():
             curr_region = div_to_region[state_to_div[current_state]]
             prev_div = state_to_div[previous_state]
             
-            divisions_to_regions[prev_div + ' to ' + curr_region + ' ' + year] = estimate
+            divisions_to_regions[prev_div + ' to ' + curr_region + ' ' + year] += int(estimate)
             
     # print(categories)
     print(divisions_to_regions)
