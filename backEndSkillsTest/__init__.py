@@ -37,6 +37,12 @@ def q1():
     #       get a list of states in each "current" region (list of lists)
     # 
     # div_states = {division: [get_states_in_div] for division in divisions}
+    # # for each state:
+    # for div, states in div_states:
+    #     for state in states:
+    #         for year in range(2010,2020):
+    #             sum_migrations = get_migrations_to_region_from_state()
+    #     # sum += estimate (of each region)
     
     #   summing with loops:
     #       define a list of states in "previous" division
@@ -46,11 +52,13 @@ def q1():
     #       and add those to the appropriate totals...
     
     REGIONS = ['R1', 'R2', 'R3', 'R4']
-    DIVISIONS =  get_all_divisions
+    DIVISIONS =  get_all_divisions()
+    categories = [d[0] + ' to ' + r + ' ' + str(y) for r in REGIONS for d in DIVISIONS for y in range(2010,2020)]
+    divisions_to_regions = defaultdict(lambda: 0)
     # get all states in a division (note the region they're in)
     
-    states_divs = {}
-    divs_regions = {}
+    state_to_div = {}
+    div_to_region = {}
     states_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data/census_states.csv')
     divs_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data/regions_and_divisions.csv')
     
@@ -63,23 +71,33 @@ def q1():
     with open(divs_file_path) as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         for row in reader:
-            divs_regions[row[0]] = row[-1]
+            div_to_region[row[0]] = row[-1]
     
     with open(states_file_path) as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         for row in reader:
-            states_divs[row[2]] = row[-1]
+            state_to_div[row[2]] = row[-1]
     
-    print(divs_regions)
-    
-    
-    # div_states = {division: [get_states_in_div] for division in divisions}
-    # # for each state:
-    # for div, states in div_states:
-    #     for state in states:
-    #         for year in range(2010,2020):
-    #             sum_migrations = get_migrations_to_region_from_state()
-    #     # sum += estimate (of each region)
+    migrations_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data/migrations.csv')
+    with open(migrations_file_path) as csvfile:
+        next(csvfile)
+        reader = csv.reader(csvfile, delimiter=',')
+        for row in reader:
+            current_state = row[0]
+            previous_state = row[1]
+            estimate = row[2]
+            year = row[4]
+            # data not fully cleaned to remove PR, which isn't listed in divisions or regions
+            if current_state == 'PR':
+                continue
+            curr_region = div_to_region[state_to_div[current_state]]
+            prev_div = state_to_div[previous_state]
+            
+            divisions_to_regions[prev_div + ' to ' + curr_region + ' ' + year] = estimate
+            
+    # print(categories)
+    print(divisions_to_regions)
+
     return '200'
     
 
