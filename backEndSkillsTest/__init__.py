@@ -51,8 +51,6 @@ def q1():
     #       check which division and region the current and previous state are in
     #       and add those to the appropriate totals...
     
-    REGIONS = ['R1', 'R2', 'R3', 'R4']
-    DIVISIONS =  get_all_divisions()
     divisions_to_regions = defaultdict(lambda: 0)
     # get all states in a division (note the region they're in)
     
@@ -97,6 +95,7 @@ def q1():
     # print(categories)
     print(divisions_to_regions)
 
+    # TODO: return data as csv
     return '200'
     
 
