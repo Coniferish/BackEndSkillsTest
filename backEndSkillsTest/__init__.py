@@ -114,20 +114,33 @@ def q2(state):
     most_moved_df = pd.DataFrame(most_moved, columns=['State with Highest Total Migration', 'Year'])
     
     percent_migration = get_percent_migration(state)
-    percent_migration_df = pd.DataFrame(percent_migration, columns=['State with Highest Migration Proportion', 'Percent Migrated', 'Year'])
-    idx = percent_migration_df.groupby(['Year'])['Percent Migrated'].transform(max) == percent_migration_df['Percent Migrated']   
+    percent_migration_df = pd.DataFrame(percent_migration, columns=[
+        'State with Highest Migration Proportion', 
+        'Percent Migration from State with Highest Proportion', 
+        'Year'])
+    idx = percent_migration_df.groupby(['Year'])['Percent Migration from State with Highest Proportion'].transform(max) == percent_migration_df['Percent Migration from State with Highest Proportion']   
     
-    dfs = pd.merge(most_moved_df, count_10k_df, how='outer', on='Year')
-    dfs = pd.merge(percent_migration_df[idx], dfs, how='outer', on='Year')
+    df = pd.merge(most_moved_df, count_10k_df, how='outer', on='Year')
+    df = pd.merge(percent_migration_df[idx], df, how='outer', on='Year')
+    # https://stackoverflow.com/questions/53141240/pandas-how-to-swap-or-reorder-columns
+    cols = list(df.columns)
+    a = cols.index('Year')
+    cols = [cols[a]] + cols[:a] + cols[a+1:]
     file_name = f"{state}_migration_stats"
-    return write_csv(dfs, file_name)
+    df = df[cols]
+    return write_csv(df, file_name)
 
 # TODO: create query based on census_id, not state abbrv
 @app.route('/previous_state/<id>/', defaults={'year':None})
 @app.route('/previous_state/<id>/<year>/')
 def previous_state(id, year):
     # https://flask.palletsprojects.com/en/2.2.x/api/#url-route-registrations
-    columns=['Current State', 'Previous State', 'Year', 'Estimated Migration', 'Estiamted Migration LB', 'Estimated Migration UB']
+    columns=['Current State', 
+             'Previous State', 
+             'Year', 
+             'Estimated Migration', 
+             'Estiamted Migration LB', 
+             'Estimated Migration UB']
     if year:
         response = pd.DataFrame(get_previous_state_year(id, year), columns=columns)
     else:
