@@ -41,11 +41,13 @@ Finally, state_populations.csv gives the population of each state for each year 
 > - `/previous_division/<id>/<year>/`
 
 
-### Overview of my solution and approach:
+## Overview of my solution and approach:
 
-For this project I chose to use MySQL, Flask, and Pandas since I already had some familiarity with them.
+For this project I chose to use MySQL, Flask, and Pandas since I already had some familiarity with them. 
 
-I started out creating the database and tables based on the csv files provided, making some changes to the structure and file names. I then initialized the tables:
+I started out focusing on Task 2 & 3, writing my sql queries because I wanted to brush up on SQL and needed a place to start. I created my database and tables, populated them, and then started making queries directly through a MySQL shell. After I had most of the queries I'd need, I focused on setting up the Flask API since I knew I'd need that for Task 3. I created my endpoints and chose to also create endpoints for Tasks 1 & 2 so all tasks could have a similar structure. I then used my SQL queries to retrieve the data for the various API endpoints.
+
+Example of initializing the tables:
 
 - `CREATE TABLE state_pop (`
 - `id INT NOT NULL AUTO_INCREMENT,`
@@ -54,7 +56,7 @@ I started out creating the database and tables based on the csv files provided, 
 - `population INT NOT NULL,`
 - `PRIMARY KEY (id));`
 
-After getting the tables configured and populated, I started out focusing on Task 2 and breaking the subproblems dwon into more simple queries, answering questions that would build towards answering the initial prompt:
+For the SQL queries, I started out answering questions that would build towards answering the initial prompts:
 
 ex 1: 	Select all states and their region
 - `SELECT s.abbrv, s.census_id, s.parent_id, d.parent_id`
@@ -78,8 +80,6 @@ ex 3: What percentage of people migrated to NC from each state each year?
 - `WHERE current_state='NC';`
 
 I answered similar questions until I either answered the initial prompt or was close enough to the answer where I knew I would be able to get the desired result using pandas and python.
-
-After completing my initial queries, I chose to use Flask to build my API. I have more recent experience with Django, but it would have added more complexity than needed for this project. 
 
 ### Routes:
 - `/migrationto/<region>/<year>/`
