@@ -43,36 +43,8 @@ def migration_to_region_in_year(region, year):
     return response
 
 @app.route('/q1/')
-def q1():
-    # previous division to current region
-    # d1 to r1
-    # d1 to r2 etc.
-    # each division will only be migrating to 3 potential regions (since they belong to their own region)
-    # each division contains 4-5 states
-    
-    # approaches:
-    #   summing w/ SQL:
-    #       get a list of states in each "previous" division (d1 = [MA, CT, NH, ME, VT])
-    #       get a list of states in each "current" region (list of lists)
-    # 
-    # div_states = {division: [get_states_in_div] for division in divisions}
-    # # for each state:
-    # for div, states in div_states:
-    #     for state in states:
-    #         for year in range(2010,2020):
-    #             sum_migrations = get_migrations_to_region_from_state()
-    #     # sum += estimate (of each region)
-    
-    #   summing with loops:
-    #       define a list of states in "previous" division
-    #       define a list of states in "current" region
-    #       iterate over the migrations data and have some conditionals that 
-    #       check which division and region the current and previous state are in
-    #       and add those to the appropriate totals...
-    
-    divisions_to_regions = defaultdict(lambda: 0)
-    # get all states in a division (note the region they're in)
-    
+def q1():    
+    divisions_to_regions = defaultdict(lambda: 0)    
     state_to_div = {}
     div_to_region = {}
     states_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data/census_states.csv')
