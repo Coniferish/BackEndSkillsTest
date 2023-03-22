@@ -11,8 +11,11 @@ def write_csv(df, file_name):
     # https://stackoverflow.com/questions/56007695/download-csv-file-in-flask-best-practice
     sio = StringIO()
     writer = csv.writer(sio)
-    writer.writerow(df.columns.tolist())
-    writer.writerows(df.values.tolist())
+    if type(df) == pd.DataFrame:
+        writer.writerow(df.columns.tolist())
+        writer.writerows(df.values.tolist())
+    else:
+        pass
     output = make_response(sio.getvalue())
     output.headers['Content-Disposition'] = f'attachment; filename={file_name}.csv'
     output.headers['Content-type'] = 'text/csv'
@@ -76,6 +79,7 @@ def q1():
             state_to_div[row[2]] = row[-1]
     
     migrations_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data/migrations.csv')
+    
     with open(migrations_file_path) as csvfile:
         next(csvfile)
         reader = csv.reader(csvfile, delimiter=',')
@@ -84,7 +88,7 @@ def q1():
             previous_state = row[1]
             estimate = row[2]
             year = row[4]
-            # data not fully cleaned to remove PR, which isn't listed in divisions or regions
+            # data was not fully cleaned to remove PR (which isn't listed in divisions or regions)
             if current_state == 'PR':
                 continue
             curr_region = div_to_region[state_to_div[current_state]]
@@ -96,6 +100,8 @@ def q1():
     print(divisions_to_regions)
 
     # TODO: return data as csv
+    file_name = "division_to_region_migration_stats"
+    write_csv(divisions_to_regions, file_name)
     return '200'
     
 
