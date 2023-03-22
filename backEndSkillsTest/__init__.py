@@ -7,15 +7,20 @@ from collections import defaultdict
 
 app = Flask(__name__)
 
-def write_csv(df, file_name):
+def write_csv(data, file_name):
     # https://stackoverflow.com/questions/56007695/download-csv-file-in-flask-best-practice
     sio = StringIO()
     writer = csv.writer(sio)
-    if type(df) == pd.DataFrame:
-        writer.writerow(df.columns.tolist())
-        writer.writerows(df.values.tolist())
+    if type(data) == pd.DataFrame:
+        writer.writerow(data.columns.tolist())
+        writer.writerows(data.values.tolist())
+    elif type(data) == defaultdict:
+        fields = ['Division to Region per Year', 'Estimate']
+        writer.writerow(fields)
+        for item in data.items():
+            writer.writerow(item)
     else:
-        pass
+        return 'Error writing csv'
     output = make_response(sio.getvalue())
     output.headers['Content-Disposition'] = f'attachment; filename={file_name}.csv'
     output.headers['Content-type'] = 'text/csv'
@@ -96,13 +101,8 @@ def q1():
             
             divisions_to_regions[prev_div + ' to ' + curr_region + ' ' + year] += int(estimate)
             
-    # print(categories)
-    print(divisions_to_regions)
-
-    # TODO: return data as csv
-    file_name = "division_to_region_migration_stats"
-    write_csv(divisions_to_regions, file_name)
-    return '200'
+    file_name = 'division_to_region_migration_stats'
+    return write_csv(divisions_to_regions, file_name)
     
 
 @app.route('/q2/<state>/')
