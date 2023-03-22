@@ -26,6 +26,17 @@ def write_csv(data, file_name):
     output.headers['Content-type'] = 'text/csv'
     return output
 
+@app.route('/')
+def home():
+    routes = """Routes: <br/>
+    /migrationto/[region]/[year]/ <br/>
+    /q2/[state: two-letter abbreviation]/ <br/>
+    /previous_state/[id]/ <br/>
+    /previous_state/[id]/[year]/ <br/>
+    /previous_division/[id]/ <br/>
+    /previous_division/[id]/[year]/"""
+    return routes
+
 @app.route('/migrationto/<region>/<year>/')
 def migration_to_region_in_year(region, year):
     response = jsonify(get_migration_to_region_in_year(region, year))
