@@ -45,7 +45,7 @@ Finally, state_populations.csv gives the population of each state for each year 
 
 For this project I chose to use MySQL, Flask, and Pandas since I already had some familiarity with them. 
 
-I started out focusing on Task 2 & 3, writing my sql queries because I wanted to brush up on SQL and needed a place to start. I created my database and tables, populated them, and then started making queries directly through a MySQL shell. After I had most of the queries I'd need, I focused on setting up the Flask API since I knew I'd need that for Task 3. I created my endpoints and chose to also create endpoints for Tasks 1 & 2 so all tasks could have a similar structure. I then used my SQL queries to retrieve the data for the various API endpoints.
+I started out focusing on Task 2 & 3, writing my SQL queries. I created my database and tables, populated them, and then started making queries directly through a MySQL shell. After I had most of the queries I'd need, I focused on setting up the Flask API since I knew I'd need that for Task 3. I created my endpoints and chose to also create endpoints for Tasks 1 & 2 so all tasks could have a similar structure. I then used my SQL queries to retrieve the data for the various API endpoints.
 
 Example of initializing the tables:
 
