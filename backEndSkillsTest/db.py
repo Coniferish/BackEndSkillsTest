@@ -119,6 +119,28 @@ q_previous_division_year = """
     AND year = '{year}';
     """
 
+q_outside_south_atlantic_to_state = """
+    SELECT
+    year,
+    SUM(m.estimate) Estimate
+    FROM migrations m
+    WHERE m.previous_state NOT IN (
+    SELECT abbrv 
+    FROM state_div_reg s
+    WHERE div_id = 'D5')
+    AND m.current_state = '{state}'
+    GROUP BY year;
+    """
+    
+q_all_migrations_to_state = """
+    SELECT
+    year,
+    SUM(m.estimate) Estimate
+    FROM migrations m
+    WHERE m.current_state = '{state}'
+    GROUP BY year;
+    """
+
 def create_connection(host_name, user_name, user_password, db_name=None):
     connection = None
     try:
@@ -187,4 +209,12 @@ def get_previous_division(d):
 
 def get_previous_division_year(d, y):
     query = q_previous_division_year.format(division=d, year=y)
+    return get_query(query)
+
+def get_outside_south_atlantic_to_state(s):
+    query = q_outside_south_atlantic_to_state.format(state=s)
+    return get_query(query)
+
+def get_all_migrations_to_state(s):
+    query = q_all_migrations_to_state.format(state=s)
     return get_query(query)

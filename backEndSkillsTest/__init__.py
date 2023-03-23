@@ -96,6 +96,16 @@ def q2(state):
     most_moved = get_most_moved_from_state(state)
     most_moved_df = pd.DataFrame(most_moved, columns=['State with Highest Total Migration', 'Year'])
     
+    outside_south_atlantic = get_outside_south_atlantic_to_state(state)
+    migration_outside_south_atlantic = pd.DataFrame(outside_south_atlantic, columns=['Year', 'Estimate D5'])
+    
+    all_migrations_to_state = get_all_migrations_to_state(state)
+    all_migrations = pd.DataFrame(all_migrations_to_state, columns=['Year', 'Estimate Total'])
+    
+    percent_s_a = pd.merge(all_migrations, migration_outside_south_atlantic, how='outer', on='Year')
+    percent_s_a['Percent Migrations from Outside South Atlantic'] = percent_s_a['Estimate D5']/percent_s_a['Estimate Total']*100
+    percent_s_a.drop(['Estimate D5', 'Estimate Total'], inplace=True, axis=1)
+    
     percent_migration = get_percent_migration(state)
     percent_migration_df = pd.DataFrame(percent_migration, columns=[
         'State with Highest Migration Proportion', 
@@ -105,6 +115,7 @@ def q2(state):
     
     df = pd.merge(most_moved_df, count_10k_df, how='outer', on='Year')
     df = pd.merge(percent_migration_df[idx], df, how='outer', on='Year')
+    df = pd.merge(percent_s_a, df, how='outer', on='Year')
     # https://stackoverflow.com/questions/53141240/pandas-how-to-swap-or-reorder-columns
     cols = list(df.columns)
     a = cols.index('Year')
