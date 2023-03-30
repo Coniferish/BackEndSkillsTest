@@ -43,9 +43,9 @@ Finally, state_populations.csv gives the population of each state for each year 
 
 ## Overview of my solution and approach:
 
-For this project I chose to use MySQL, Flask, and Pandas since I already had some familiarity with them. 
+For this project I chose to use MySQL, Flask, and Pandas since I already had some familiarity with them. That said, at the time of this challenge I had not done much in Python for a year prior to this and had just recently set up MySQL on my computer. I had not made any SQL queries in well over a year, though, so I was refamiliarizing myself with SQL as I went along. I additionally had not done anything with Flask in a while either (I was working primarily in Java for the last year). I wanted to demonstrate my ability to quicly get back up to speed on these tools, though.
 
-I started out focusing on Task 2 & 3 and writing my SQL queries. I had not worked with SQL in over a year, so I was refamiliarizing myself with SQL as I went along. I created my database and tables, populated them, and then started making queries directly through a MySQL shell. After I had most of the queries I'd need, I focused on setting up the Flask API since I knew I'd need that for Task 3. I created my endpoints and chose to also create endpoints for Tasks 1 & 2 so all tasks could have a similar structure. I then used my SQL queries to retrieve the data for the various API endpoints.
+I started out focusing on Task 2 & 3 and writing my SQL queries. I created my database and tables, populated them, and then started making queries directly through a MySQL shell. After I had most of the queries I'd need, I focused on setting up the Flask API since I knew I'd need that for Task 3. I created my endpoints and chose to also create endpoints for Tasks 1 & 2 so all tasks could have a similar structure. I then used my SQL queries to retrieve the data for the various API endpoints.
 
 Example of initializing the tables:
 
@@ -82,9 +82,10 @@ ex 3: What percentage of people migrated to NC from each state each year?
 I answered similar questions until I either answered the initial prompt or was close enough to the answer where I knew I would be able to get the desired result using pandas and python.
 
 ### Routes:
-- `/migrationto/<region>/<year>/`
+- `/q1/`
 - `/q2/<state>/`
 - `/previous_state/<id>/`
 - `/previous_state/<id>/<year>/`
 - `/previous_division/<id>/`
 - `/previous_division/<id>/<year>/`
+- `/migrationto/<region>/<year>/`
