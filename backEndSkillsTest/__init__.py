@@ -29,12 +29,13 @@ def write_csv(data, file_name):
 @app.route('/')
 def home():
     routes = """Routes: <br/>
-    /migrationto/[region]/[year]/ <br/>
-    /q2/[state: two-letter abbreviation]/ <br/>
+    /task1/ <br/>
+    /task2/[state: two-letter abbreviation]/ <br/>
     /previous_state/[id]/ <br/>
     /previous_state/[id]/[year]/ <br/>
     /previous_division/[id]/ <br/>
-    /previous_division/[id]/[year]/"""
+    /previous_division/[id]/[year]/
+    /migrationto/[region]/[year]/ <br/>"""
     return routes
 
 @app.route('/migrationto/<region>/<year>/')
@@ -42,7 +43,7 @@ def migration_to_region_in_year(region, year):
     response = jsonify(get_migration_to_region_in_year(region, year))
     return response
 
-@app.route('/q1/')
+@app.route('/task1/')
 def q1():    
     divisions_to_regions = defaultdict(lambda: 0)    
     state_to_div = {}
@@ -88,7 +89,7 @@ def q1():
     return write_csv(divisions_to_regions, file_name)
     
 
-@app.route('/q2/<state>/')
+@app.route('/task2/<state>/')
 def q2(state):
     count_10k = get_num_of_states_min_10k_moved(state)
     count_10k_df = pd.DataFrame(count_10k, columns=['Count of States with Migration > 10k', 'Year'])

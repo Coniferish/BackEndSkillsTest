@@ -82,8 +82,8 @@ ex 3: What percentage of people migrated to NC from each state each year?
 I answered similar questions until I either answered the initial prompt or was close enough to the answer where I knew I would be able to get the desired result using pandas and python.
 
 ### Routes:
-- `/q1/`
-- `/q2/<state>/`
+- `/task1/`
+- `/task2/<state>/`
 - `/previous_state/<id>/`
 - `/previous_state/<id>/<year>/`
 - `/previous_division/<id>/`
